@@ -28,6 +28,11 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+    if (person.number === '') {
+      setErrorMessage(`Please input a number`)
+      setTimeout(() => setErrorMessage(null), 5000)
+      return
+    }
     const existingPerson = persons.find(p => p.name === newName)
     if (existingPerson) {
       if (window.confirm(`${newName} is already in the phonebook, replace their number with a new one?`)) {
@@ -57,8 +62,7 @@ const App = () => {
         setTimeout(() => setChangeMessage(null), 5000)
       })
       .catch(error => {
-        setErrorMessage(`Information of ${person.name} has already been 
-          removed from the server`)
+        setErrorMessage(`Updating the information of ${person.name} has failed. It could have been already deleted.`)
         setTimeout(() => setErrorMessage(null), 5000)
         setPersons(persons.filter(p => (p.id !== person.id)))
       })
@@ -79,7 +83,7 @@ const App = () => {
       .catch(error => {
         setErrorMessage(`Information of ${toBeDeleted.name} has already been 
           removed from the server`)
-        setTimeout(() => setErrorMessage(null), 5000)  
+        setTimeout(() => setErrorMessage(null), 5000)
         setPersons(persons.filter(p => (p.id !== toBeDeleted.id)))
       })
   }
