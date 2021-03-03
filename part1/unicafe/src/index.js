@@ -7,7 +7,7 @@ const Button = (props) => (
   </button>
 )
 
-const Statistic = ({text, value}) => (
+const Statistic = ({ text, value }) => (
   <>
     <tr>
       <td>{text}:</td>
@@ -16,9 +16,9 @@ const Statistic = ({text, value}) => (
   </>
 )
 
-const Statistics = ({good, neutral, bad}) => {
+const Statistics = ({ good, neutral, bad }) => {
 
-  if(good+neutral+bad === 0) {
+  if (good + neutral + bad === 0) {
     return (
       <div>
         <h2>Statistics</h2>
@@ -30,15 +30,15 @@ const Statistics = ({good, neutral, bad}) => {
   return (
     <div>
       <h2>Statistics</h2>
-        <table>
-          <tbody>
-            <Statistic text='Good' value={good}></Statistic>
-            <Statistic text='Neutral' value={neutral}></Statistic>
-            <Statistic text='Bad' value={bad}></Statistic>
-            <Statistic text='Average' value={(good-bad)/(good+neutral+bad)}></ Statistic>
-            <Statistic text='Positive' value={good/(good+neutral+bad)*100 + ' %'}></Statistic>
-          </tbody>
-        </table>
+      <table>
+        <tbody>
+          <Statistic text='Good' value={good}></Statistic>
+          <Statistic text='Neutral' value={neutral}></Statistic>
+          <Statistic text='Bad' value={bad}></Statistic>
+          <Statistic text='Average' value={(good - bad) / (good + neutral + bad)}></Statistic>
+          <Statistic text='Positive' value={good / (good + neutral + bad) * 100 + ' %'}></Statistic>
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -52,13 +52,12 @@ const App = () => {
   return (
     <div>
       <h1>Give feedback</h1>
-      <Button handleClick={()=>setGood(good+1)} text='Good'></Button>
-      <Button handleClick={()=>setNeutral(neutral+1)} text='Neutral'></Button>
-      <Button handleClick={()=>setBad(bad+1)} text='Bad'></Button>
+      <Button handleClick={() => setGood(good + 1)} text='Good'></Button>
+      <Button handleClick={() => setNeutral(neutral + 1)} text='Neutral'></Button>
+      <Button handleClick={() => setBad(bad + 1)} text='Bad'></Button>
       <Statistics good={good} neutral={neutral} bad={bad}></Statistics>
     </div>
   )
-
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
