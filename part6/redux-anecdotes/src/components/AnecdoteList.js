@@ -1,13 +1,20 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { changeMessage, resetMessage } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => {
+    return state.filter ?
+      state.anecdotes.filter(a => a.content.toLowerCase().includes(state.filter.toLowerCase()))
+      : state.anecdotes
+  })
   const dispatch = useDispatch()
 
-  const vote = (id) => {
+  const vote = (id, title) => {
     dispatch(voteAnecdote(id))
+    dispatch(changeMessage(`You voted '${title}'`))
+    setTimeout(() => dispatch(resetMessage()), 2000)
   }
 
   return (
@@ -19,7 +26,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes} {anecdote.votes === 1 ? 'vote' : 'votes'}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
           </div>
         </div>
       )}
