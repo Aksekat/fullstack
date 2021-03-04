@@ -16,7 +16,7 @@ const reducer = (state = [], action) => {
       return state.concat(action.data)
     }
     case 'INIT_NOTES': {
-      return action.data
+      return action.data.sort((a, b) => b.votes - a.votes)
     }
     default: return state
   }

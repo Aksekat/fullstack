@@ -6,7 +6,7 @@ const reducer = (state = null, action) => {
   }
 }
 
-export const changeFilter = (query) => {
+export const setFilter = (query) => {
   return {
     type: 'SET_FILTER',
     data: { query }
