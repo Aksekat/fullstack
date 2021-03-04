@@ -1,9 +1,9 @@
 let timeoutID
 
-const reducer = (state = null, action) => {
+const reducer = (state, action) => {
   switch (action.type) {
     case 'UPDATE':
-      return (action.data.message)
+      return action.data.message
     case 'RESET':
       return null
     default: return state
@@ -11,7 +11,6 @@ const reducer = (state = null, action) => {
 }
 
 export const setNotification = (message, time) => {
-
   return async dispatch => {
     clearTimeout(timeoutID)
     timeoutID = setTimeout(() => dispatch(clearNotification()), time*1000)
