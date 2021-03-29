@@ -5,7 +5,8 @@ import Recommendations from './components/Recommendations'
 import NewBook from './components/NewBook'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { ALL_BOOKS, ALL_AUTHORS, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -26,6 +27,37 @@ const App = () => {
     client.resetStore()
   }
 
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const book = subscriptionData.data.bookAdded
+      console.log(book)
+      book.genres.forEach(g => {
+        const booksInStore = client.readQuery({
+          query: ALL_BOOKS,
+          variables: { genre: g }
+        })
+        if (booksInStore) client.writeQuery({
+          query: ALL_BOOKS,
+          variables: { genre: g },
+          data: { ...booksInStore, allBooks: [...booksInStore.allBooks, book] }
+        })
+      })
+      const booksInStore = client.readQuery({ query: ALL_BOOKS })
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { ...booksInStore, allBooks: [...booksInStore.allBooks, book] }
+      })
+
+      const authorsInStore = client.readQuery({ query: ALL_AUTHORS })
+      if (!authorsInStore.allAuthors.map(a => a.name).includes(book.author.name)) {
+        client.writeQuery({
+          query: ALL_AUTHORS,
+          data: { allAuthors: authorsInStore.allAuthors.concat(book.author) }
+        })
+      }
+    }
+  })
+
   if (!token) {
     return (
       <div>
@@ -37,7 +69,7 @@ const App = () => {
         <Notification errorMessage={errorMessage} />
         <Authors show={page === 'authors'} />
         <Books show={page === 'books'} />
-        <LoginForm show={page === 'login'} setToken={setToken} setError={notify} setPage={setPage}/>
+        <LoginForm show={page === 'login'} setToken={setToken} setError={notify} setPage={setPage} />
       </div>
     )
   }
